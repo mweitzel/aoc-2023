@@ -1,0 +1,64 @@
+#!/bin/bash
+
+jq --raw-input '.|split(" ")' example
+
+echo 'xxxxxxx'
+
+
+# jq --raw-input '.|split(" ") |reduce .[] as $i ({}; .[$i.name] = $i)   ' example
+
+jq --raw-input '
+  . |
+  split(" ") |
+  reduce . as $i ({}; .["original"] = $i) |
+  reduce . as $i (.; .["hand"] = $i.original[0]) |
+  reduce . as $i (.; .["bid"] = $i.original[1]) |
+  reduce (.bid|tonumber) as $i (.; .["bid"] = $i) |
+  reduce . as $i (.; .["points_map"] = {"A":50,"K":40,"Q":30,"J":20,"T":10,"9":9,"8":8,"7":7,"6":6,"5":5,"4":4,"3":3,"2":2}) |
+  reduce (.hand|split("")[0]) as $first (.; .["point_1_00_00_00_00"] = (.["points_map"][$first])) |
+  reduce (.hand|split("")[1]) as $second (.; .["point_1_00_00_00"] = (.["points_map"][$second])) |
+  reduce (.hand|split("")[2]) as $third (.; .["point_1_00_00"] = (.["points_map"][$third])) |
+  reduce (.hand|split("")[3]) as $fourth (.; .["point_1_00"] = (.["points_map"][$fourth])) |
+  reduce (.hand|split("")[4]) as $fifth (.; .["point_1"] = (.["points_map"][$fifth])) |
+  reduce (.hand) as $hand (.; .["hand_score"] = (
+    $hand|
+    split("")|sort|join("")|
+    sub("(AAAAA|KKKKK|QQQQQ|JJJJJ|TTTTT|99999|88888|77777|66666|55555|44444|33333|22222)";"__quin__")|
+    sub("(AAAA|KKKK|QQQQ|JJJJ|TTTT|9999|8888|7777|6666|5555|4444|3333|2222)";"__quad__")|
+    sub("(AAA|KKK|QQQ|JJJ|TTT|999|888|777|666|555|444|333|222)";"__triple__")|
+    gsub("(AA|KK|QQ|JJ|TT|99|88|77|66|55|44|33|22)";"__pair__")|
+    gsub("(A|K|Q|J|T|9|8|7|6|5|4|3|2)";"")|
+    gsub("^$";"__high_card__")|
+    sub("__triple____pair__";"__full_house__")|
+    sub("__pair____triple__";"__full_house__")|
+    .
+  )) |
+  reduce (.hand_score) as $hand_score (.; .["point_1_00_00_00_00_00"] = (
+    $hand_score|
+    sub("__quin__";"90")|
+    sub("__quad__";"80")|
+    sub("__full_house__";"70")|
+    sub("__triple__";"60")|
+    sub("__pair____pair__";"50")|
+    sub("__pair__";"40")|
+    sub("__high_card__";"30")|
+    tonumber
+  )) |
+  reduce . as $play (.; .["score"] = (
+    (10000000000 * $play.point_1_00_00_00_00_00) +
+    (100000000   * $play.point_1_00_00_00_00) +
+    (1000000     * $play.point_1_00_00_00) +
+    (10000       * $play.point_1_00_00) +
+    (100         * $play.point_1_00) +
+    (1           * $play.point_1)
+  )) |
+  . ' input | jq -s '
+  sort_by(.score) |
+  to_entries | map(.multiplier = (.key+1)) |
+  to_entries | map(.full_score = (.value.value.bid * .value.multiplier)) |
+  to_entries | map(.value.full_score) |
+  add |
+  .
+'
+
+
