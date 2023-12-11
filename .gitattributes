@@ -1,2 +1,4 @@
 input binary
 output* binary
+output* binary
+day8/build/** binary
