@@ -1,0 +1,1 @@
+-record(round, {counter :: integer(), lrlr :: binary(), current :: binary()}).
