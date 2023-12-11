@@ -1,5 +1,7 @@
 # x
 
+(Find source in src/x.gleam)
+
 [![Package Version](https://img.shields.io/hexpm/v/x)](https://hex.pm/packages/x)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/x/)
 
