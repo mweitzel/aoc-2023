@@ -5,6 +5,7 @@ solve_part_one() ->
   ok, Input = read_input(),
 
   Lines = string:lexemes(Input, "\n"),
+  p(Lines),
 
   Pieces = lists:map(fun(Line) -> string:lexemes(Line, " ") end, Lines),
   XXX = lists:map(fun([L, R]) ->
@@ -36,12 +37,7 @@ variations(L, R) ->
 
   {ok, Re1} = re:compile("(\\?|\\?[\\.#]*)"),
   Split  = re:replace(L, Re1, "_", [global]),
-  LAfter = re:replace(L, Re1, fun(BinaryA, _BinaryB) ->
-    case BinaryA of
-      "?" -> lists:append(BinaryA,[]);
-      _ -> []
-    end
-  end, [global]),
+  LAfter = re:replace(L, "\\?", "", [global]),
 
   QCount = string:length(L) - string:length(LAfter),
   p("xxx----perms-----xxx"),
@@ -82,14 +78,8 @@ apply_potential(LandscapeWithQs, [X|Rest]) ->
 apply_potential(LandscapeWithoutQs) ->
   list_to_binary(LandscapeWithoutQs).
 
-
-
-%normal(S) -> try of string:length > 0 catch false end.
-%normal(S) -> string:length(S) > 0 catch false end.
-normal(S) -> string:length(S) > 0.
-
-toggle(0, Str0, Str1) -> Str0;
-toggle(1, Str0, Str1) -> Str1.
+toggle(0, Str0, _Str1) -> Str0;
+toggle(1, _Str0, Str1) -> Str1.
 
 
 % e.g.
@@ -100,7 +90,7 @@ describe_map(Landscape) ->
   .
 
 eq(Expected, Actual) when Expected =:= Actual -> true;
-eq(Expected, Actual) -> false.
+eq(_Expected, _Actual) -> false.
 
 
 % blatently copied from http://blog.sethladd.com/2007/08/calculating-combinations-erlang-way.html
