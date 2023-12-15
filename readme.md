@@ -7,6 +7,7 @@ days
 - day 6 - awk
 - day 7 - jq
 - day 8 - Gleam
+- day 8 - Julia
 
 languages todo:
 - a shader language
@@ -20,3 +21,4 @@ languages done:
 - purely functional (gleam)
 - declarative (sql, excel)
 - other c based fallbacks
+- technically an array based language (Julia), but syntax is c-like, not an implicit grammar like apl)
