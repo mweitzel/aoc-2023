@@ -7,18 +7,19 @@ days
 - day 6 - awk
 - day 7 - jq
 - day 8 - Gleam
-- day 8 - Julia
+- day 9 - Julia
+- day 10 - Racket (part 1)
 
 languages todo:
 - a shader language
 - an assembly?
-- some lisp
 - fully do one day on a microcontroller
 - an array based language (apl, j, etc)
 
 languages done:
 - stream based languages (awk/bash/jq)
 - purely functional (gleam)
+- some lisp (racket)
 - declarative (sql, excel)
 - other c based fallbacks
 - technically an array based language (Julia), but syntax is c-like, not an implicit grammar like apl)
