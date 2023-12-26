@@ -9,6 +9,8 @@ days
 - day 8 - Gleam
 - day 9 - Julia
 - day 10 - Racket (part 1)
+- day 12 - Erlang (part 1)
+- day 16 - C
 
 languages todo:
 - a shader language
